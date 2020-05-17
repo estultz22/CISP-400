@@ -1,0 +1,19 @@
+# depslib dependency file v1.0
+1589256008 source:c:\users\elija\desktop\school\cisp 400\p6vector\vector\main.cpp
+	<iostream>
+	"Vector.h"
+	<fstream>
+
+1589256041 c:\users\elija\desktop\school\cisp 400\p6vector\vector\include\vector.h
+	<iostream>
+	<fstream>
+
+1589269235 source:c:\users\elija\desktop\school\cisp 400\p6p7vector\vector\main.cpp
+	<iostream>
+	"Vector.h"
+	<fstream>
+
+1589269255 c:\users\elija\desktop\school\cisp 400\p6p7vector\vector\include\vector.h
+	<iostream>
+	<fstream>
+
