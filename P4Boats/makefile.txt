@@ -1,0 +1,30 @@
+#Elijah Stultz
+#CISP 400, MW, 3:00pm
+#Programming Project 4
+#April 15, 2020
+
+main: main.o MusclePowered.o Kayak.o Shanty.o MotorPowered.o Ski.o CabinCruiser.o Boat.o
+	g++ main.o MusclePowered.o Kayak.o Shanty.o MotorPowered.o Ski.o CabinCruiser.o Boat.o -o main
+
+main.o: main.cpp MusclePowered.o Kayak.o Shanty.o MotorPowered.o Ski.o CabinCruiser.o Boat.o
+	g++ -pedantic -Wall main.cpp -c
+
+Ski.o: Ski.cpp Ski.h MotorPowered.o Boat.o
+	g++ -pedantic -Wall Ski.cpp -c
+
+CabinCruiser.o: CabinCruiser.cpp CabinCruiser.h MotorPowered.o Boat.o
+	g++ -pedantic -Wall CabinCruiser.cpp -c
+
+Kayak.o: Kayak.cpp Kayak.h MusclePowered.o Boat.o
+	g++ -pedantic -Wall Kayak.cpp -c
+
+Shanty.o: Shanty.cpp Shanty.h MusclePowered.o Boat.o
+	g++ -pedantic -Wall Shanty.cpp -c
+
+MotorPowered.o: MotorPowered.cpp MotorPowered.h Boat.o
+	g++ -pedantic -Wall MotorPowered.cpp -c
+
+MusclePowered.o: MusclePowered.cpp MusclePowered.h Boat.o
+	g++ -pedantic -Wall MusclePowered.cpp -c
+
+
