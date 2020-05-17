@@ -1,0 +1,11 @@
+#Elijah Stultz
+#CISP 400, MW, 3:00pm
+#Programming Project 3
+#March 11, 2020
+
+main: RationalMain.o Rational.o
+	g++ -pedantic -Wall RationalMain.o Rational.o -o main
+RationalMain.o: RationalMain.cpp  Rational.cpp Rational.h
+	g++ -pedantic -Wall RationalMain.cpp -c
+Rational.o: Rational.cpp Rational.h
+	g++ -pedantic -Wall Rational.cpp -c

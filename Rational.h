@@ -1,13 +1,12 @@
 /*
 Elijah Stultz
 CISP 400 - MW 3:00PM
-Programming Project 2
-February 26, 2020
+Programming Project 3
+March 11, 2020
 */
 
-#ifndef _RATIONAL_H_
-
-#define _RATIONAL_H_
+#ifndef RATIONAL_H_ECS_
+#define RATIONAL_H_ECS_
 
 #include <iostream>
 
@@ -16,29 +15,127 @@ using namespace std;
 class Rational
 
 {
-  int _p;
+  long long _p;
 
-  int _q;
+  long long _q;
 
+  //private member functions as needed
   void _verify();
-
 
 public:
 
-  Rational();
+  Rational( );  // 0:1
 
-  Rational(int P, int Q = 1);
+  Rational( long long P, long long Q = 1 );
 
-  void display() const; // _p:_q
+  Rational ( const Rational& );
 
-  void add(const Rational&);
+  void display() const; //delete after finishing whole project
 
-  void sub(const Rational&);
+  Rational& operator= (const Rational&);
 
-  void mult(const Rational&);
+  Rational& operator+= (const Rational&);
 
-  void div(const Rational&);
+  Rational& operator-= (const Rational&);
+
+  Rational& operator*= (const Rational&);
+
+  Rational& operator/= (const Rational&);
+
+
+
+  friend ostream& operator<< (ostream&, const Rational&);
+
+  friend istream& operator>> (istream&, Rational&);
+
+  // operator>> must read what operator<< writes
+
+
+
+  Rational operator+ (const Rational&) const; //[1]
+
+  Rational operator+ (long long) const;
+
+  friend Rational operator+ (long long, const Rational&);
+
+  Rational operator- (const Rational&) const;
+
+  Rational operator- (long long) const;
+
+  friend Rational operator- (long long, const Rational&);
+
+  Rational operator* (const Rational&) const;
+
+  Rational operator* (long long) const;
+
+  friend Rational operator* (long long, const Rational&);
+
+  Rational operator/ (const Rational&) const;
+
+  Rational operator/ (long long) const;
+
+  friend Rational operator/ (long long, const Rational&);
+
+
+
+  bool operator== (const Rational&) const; //[2] implement this one
+
+  bool operator== (long long) const;
+
+  friend bool operator== (long long, const Rational&);
+
+  bool operator!= (const Rational&) const;
+
+  bool operator!= (long long) const;
+
+  friend bool operator!= (long long, const Rational&);
+
+  bool operator> (const Rational&) const; // implement this one
+
+  bool operator> (long long) const;
+
+  friend bool operator> (long long, const Rational&);
+
+  bool operator< (const Rational&) const;
+
+  bool operator< (long long) const;
+
+  friend bool operator< (long long, const Rational&);
+
+  bool operator>= (const Rational&) const;
+
+  bool operator>= (long long) const;
+
+  friend bool operator>= (long, const Rational&);
+
+  bool operator<= (const Rational&) const;
+
+  bool operator<= (long long) const;
+
+  friend bool operator<= (long long, const Rational&);
+
+
+
+  Rational operator++ (int); //post
+
+  Rational operator-- (int); //post
+
+  Rational& operator++ (); //pre
+
+  Rational& operator-- (); //pre
+
+  Rational operator- () const;
+
+  Rational operator+ () const;
+
+
+
+  Rational pow( unsigned exp ) const; //returns (*this)exp
+
+
+
+  Rational inverse() const;
 
 };
 
-#endif
+#endif // RATIONAL_H

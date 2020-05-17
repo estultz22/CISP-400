@@ -1,124 +1,312 @@
 /*
 Elijah Stultz
 CISP 400 - MW 3:00PM
-Programming Project 2
-February 26, 2020
+Programming Project 3
+March 11, 2020
 */
 
 #include "Rational.h"
 #include <iostream>
 
+using namespace std;
+
 int gcd(int, int);
 
 Rational::Rational()
+:_p(0), _q(1)
+{}
+
+Rational::Rational(long long P, long long Q)
+:_p(P), _q(Q)
 {
-  this->_p = 0;
-  this->_q = 1;
-}
-
-Rational::Rational(int P, int Q)
-{
-  this->_p = P;
-  this->_q = Q;
-}
-
-void Rational::display() const
-{
-  cout << this->_p << ":" << this->_q << endl;
-}
-
-void Rational::add(const Rational& r)
-{
-  Rational num(r._p, r._q);
-  int magicOne = 1, magicOne2 = 1, _gcd;
-
-  num._verify();
-
-  _gcd = gcd(num._q, this->_q);
-
-  if (num._q > this->_q)
-  {
-    magicOne = num._q / _gcd;
-    magicOne2 = _q / _gcd;
-
-    //equalizes denominators to add correctly
-    _p = _p * magicOne + num._p * magicOne2;
-    _q *= magicOne;
-  }
-  else if (num._q < _q)
-  {
-    magicOne = this->_q / _gcd;
-    magicOne2 = num._q / _gcd;
-
-    _p = _p * magicOne2 + num._p * magicOne;
-    _q *= magicOne2;
-  }
-  else _p += num._p;
-
   _verify();
 }
 
-void Rational::sub(const Rational& r)
+Rational::Rational(const Rational& r)
+:_p(r._p), _q(r._q)
+{}
+
+Rational& Rational::operator=(const Rational& r)
 {
-  Rational num(r._p, r._q);
-  int magicOne = 1, magicOne2 = 1, _gcd;
+  if (this == &r) return *this;
 
-  num._verify();
+  _p = r._p;
+  _q = r._q;
 
-  _gcd = gcd(num._q, this->_q);
-
-  if (num._q > this->_q)
-  {
-    magicOne = num._q / _gcd;
-    magicOne2 = _q / _gcd;
-
-    _p = _p * magicOne - num._p * magicOne2;
-    _q *= magicOne;
-  }
-  else if (num._q < _q)
-  {
-    magicOne = this->_q / _gcd;
-    magicOne2 = num._q / _gcd;
-
-    _p = _p * magicOne2 - num._p * magicOne;
-    _q *= magicOne2;
-  }
-  else _p -= num._p;
-
-  _verify();
+  return *this;
 }
 
-
-void Rational::mult(const Rational& r)
+Rational& Rational::operator+=(const Rational& r)
 {
-  Rational num(r._p, r._q);
+ //assuming parameter r is a verified rational number
+  Rational num = r;
+  //cross-multiplies numer with denom and adds numers
+  _p *= num._q;
+  num._p *= _q;
+  _q *= num._q;
+  _p += num._p;
 
-  num._verify();
-
-  this->_p *= num._p;
-  this->_q *= num._q;
-
+  //verify and reduce new number
   _verify();
+
+  return *this;
 }
 
-void Rational::div(const Rational& r)
+Rational& Rational::operator-=(const Rational& r)
 {
-  Rational n(r._p, r._q);
+  return operator+=(-r);
+}
 
+Rational& Rational::operator*=(const Rational& ra)
+{
+  _p *= ra._p;
+  _q *= ra._q;
+
+  _verify();
+
+  return *this;
+}
+
+Rational& Rational::operator/=(const Rational& ra)
+{
   //dividing two rational numbers (a/b)/(c/d) is the same as (a/b) * (d/c)
-  n._verify();
+  if (ra._p != 0) return operator*=(ra.inverse());
+  return *this;
+}
 
-  this->_p *= n._q;
-  this->_q *= n._p;
 
-  _verify();
+
+ostream& operator<<(ostream& os, const Rational& ra)
+{
+  os << ra._p << ":" << ra._q;
+  return os;
+}
+
+istream& operator>>(istream& is, Rational& ra)
+{
+  long long p, q;
+  char c;
+
+  is >> p >> c >> q;
+  ra = Rational(p, q);
+
+  return is;
+}
+
+
+
+Rational Rational::operator+(const Rational& ra) const
+{
+  return Rational(*this) += ra;
+}
+
+Rational Rational::operator+(long long a) const
+{
+  return Rational(*this) += Rational(a);
+}
+
+Rational operator+(long long a, const Rational& ra)
+{
+  return Rational(a) += ra;
+}
+
+Rational Rational::operator-(const Rational& ra) const
+{
+  Rational rn(_p, _q);
+  return rn -= ra;
+}
+
+Rational Rational::operator-(long long a) const
+{
+  Rational rn = *this;
+  return rn.operator+=(-a);
+}
+
+Rational operator-(long long a, const Rational& ra)
+{
+  return Rational(a) -= ra;
+}
+
+Rational Rational::operator*(const Rational& ra) const
+{
+  return Rational(*this) *= ra;
+}
+
+Rational Rational::operator*(long long a) const
+{
+  Rational rn = *this;
+  return rn *= a;
+}
+
+Rational operator*(long long a, const Rational& ra)
+{
+  return Rational(a) *= ra;
+}
+
+Rational Rational::operator/(const Rational& ra) const
+{
+  return Rational(*this) /= ra;
+}
+
+Rational Rational::operator/(long long a) const
+{
+  return Rational(*this) /= a;
+}
+
+Rational operator/(long long a, const Rational& ra)
+{
+  return Rational(a) /= ra;
+}
+
+
+
+bool Rational::operator==(const Rational& ra) const
+{
+  return (_p == ra._p && _q == ra._q);
+}
+
+bool Rational::operator==(long long a) const
+{
+  return (*this) == Rational(a);
+}
+
+bool operator==(long long a, const Rational& ra)
+{
+  return Rational(a) == ra;
+}
+
+bool Rational::operator!=(const Rational& ra) const
+{
+  return !((*this) == ra);
+}
+
+bool Rational::operator!=(long long a) const
+{
+  return !((*this) == Rational(a));
+}
+
+bool operator!= (long long a, const Rational& ra)
+{
+  return !(Rational(a) == ra);
+}
+
+bool Rational::operator>(const Rational& ra) const
+{
+  long long p1 = _p * ra._q;
+  long long p2 = _q * ra._p;
+
+  return p1 > p2;
+}
+
+bool Rational::operator>(long long a) const
+{
+  return (*this) > Rational(a);
+}
+
+bool operator>(long long a, const Rational& ra)
+{
+  return Rational(a) > ra;
+}
+
+bool Rational::operator<(const Rational& ra) const
+{
+  return !((*this) > ra) && !((*this) == ra);
+}
+
+bool Rational::operator<(long long a) const
+{
+  return (*this) < Rational(a);
+}
+
+bool operator<(long long a, const Rational& ra)
+{
+  return Rational(a) < ra;
+}
+
+bool Rational::operator>= (const Rational& ra) const
+{
+  return (*this) > ra || (*this) == ra;
+}
+
+bool Rational::operator>= (long long a) const
+{
+  return (*this) >= Rational(a);
+}
+
+bool operator>= (long a, const Rational& ra)
+{
+  return Rational(a) >= ra;
+}
+
+bool Rational::operator<=(const Rational& ra) const
+{
+  return (*this) < ra || (*this) == ra;
+}
+
+bool Rational::operator<= (long long a) const
+{
+  return (*this) <= Rational(a);
+}
+
+bool operator<= (long long a, const Rational& ra)
+{
+  return Rational(a) <= ra;
+}
+
+Rational Rational::operator++ (int)//post
+{
+  Rational r(*this);
+  r += 1;
+  return r;
+}
+
+Rational Rational::operator-- (int)//post
+{
+  Rational r(*this);
+  r -= 1;
+  return r;
+}
+
+Rational& Rational::operator++ ()//pre
+{
+  *this += 1;
+  return *this;
+}
+
+Rational& Rational::operator-- ()//pre
+{
+  *this -= 1;
+  return *this;
+}
+
+Rational Rational::operator-() const
+{
+  return Rational(*this) * -1;
+}
+
+Rational Rational::operator+ () const
+{
+  return *this;
+}
+
+
+Rational Rational::pow( unsigned exp ) const //returns (*this)exp
+{
+  if (exp == 0) return 1;
+  else return Rational(*this) * pow(exp - 1);
+}
+
+
+// returns the multiplicative inverse of *this;
+Rational Rational::inverse() const
+{
+  return Rational(_q, _p);
 }
 
 void Rational::_verify()
 {
   if (_q <= 0)
   {
-    //denominator cannot be zero
     if (_q == 0) _q = 1;
     //switch signs; pos/neg -> neg/pos
     else if (_q < 0)
@@ -132,11 +320,9 @@ void Rational::_verify()
 
   if (_gcd < 0) _gcd *= -1;
 
-  while (_p % _gcd == 0 && _q % _gcd == 0 && _gcd != 1)
-  {
-    _q /= _gcd;
-    _p /= _gcd;
-  }
+  _q /= _gcd;
+  _p /= _gcd;
+
 }
 
 //Euclid's gcd algorithm
